@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EL-Pollo-Loco</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="img/3_enemies_chicken/chicken_normal/1_walk/1_w.png" type="image/x-icon">
+    <script src="models/world.class.js"></script>
+
+    <script src="models/drawable-object.class.js"></script>
+
+    <script src="models/movable-object.class.js"></script>
+
+    <script src="models/keyboard.class.js"></script>
+
+    <script src="models/cloud.class.js"></script>
+    <script src="models/character.class.js"></script>
+    <script src="models/chicken.class.js"></script>
+    <script src="models/chicken-small-class.js"></script>
+    <script src="models/background-object.class.js"></script>
+    <script src="models/level.class.js"></script>
+    <script src="models/endboss.class.js"></script>
+    <script src="models/coin.class.js"></script>
+    <script src="models/bottle.class.js"></script>
+    <script src="models/status-bar-health.class.js"></script>
+    <script src="models/status-bar-bottle.class.js"></script>
+    <script src="models/status-bar-coin.class.js"></script>
+    <script src="models/status-bar-endboss.class.js"></script>
+    <script src="models/thorwable-object.class.js"></script>
+
+    <script src="levels/level1.js"></script>
+
+    <script src="js/game.js" defer></script>
+
+</head>
+
+<body id="body">
+    <h1 id="headline">Welcome to El-Pollo-Loco!</h1>
+    <h2 id="rotateHint" class="d-none no-underline">To play, please rotate your device!</h2>
+    <img src="img/myImages/newIcons/rotate.png" id="rotateImage" class="d-none">
+
+    <div id="gamescreen" class="gameScreen d-none">
+        <canvas id="canvas" class="d-none" width="720" height="480px">
+
+        </canvas>
+        <div id="soundControl" class="soundControl d-none">
+            <div class="sound">
+                <img id="soundOnImg" onclick="muteSound()" src="img/myImages/newIcons/soundOn.png">
+                <img id="soundOffImg" class="d-none" onclick="unmuteSound()" src="img/myImages/newIcons/soundOff.png">
+            </div>
+            <div class="pause">
+                <img id="pauseGameImg" onclick="gamePaused()" src="img/myImages/newIcons/pauseButton.png">
+                <img id="playGameImg" class="d-none" onclick="gameContinued()"
+                    src="img/myImages/newIcons/playButton.png">
+            </div>
+        </div>
+
+        <div id="controlsForMobile" class="d-none">
+            <div class="moving">
+                <svg id="btnLeft" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                    <path fill="#FFD43B"
+                        d="M512 256A256 256 0 1 0 0 256a256 256 0 1 0 512 0zM231 127c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-71 71L376 232c13.3 0 24 10.7 24 24s-10.7 24-24 24l-182.1 0 71 71c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0L119 273c-9.4-9.4-9.4-24.6 0-33.9L231 127z" />
+                </svg>
+                <svg id="btnRight" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                    <path fill="#FFD43B"
+                        d="M0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM281 385c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l71-71L136 280c-13.3 0-24-10.7-24-24s10.7-24 24-24l182.1 0-71-71c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L393 239c9.4 9.4 9.4 24.6 0 33.9L281 385z" />
+                </svg>
+            </div>
+            <div class="jumpingAndThrow">
+                <svg id="jump" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                    <path fill="#FFD43B"
+                        d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM385 231c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-71-71V376c0 13.3-10.7 24-24 24s-24-10.7-24-24V193.9l-71 71c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9L239 119c9.4-9.4 24.6-9.4 33.9 0L385 231z" />
+                </svg>
+                <img id="bottleThrow" src="img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png">
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div id="startscreen" class="startscreen">
+        <div id="hintContent" class="hint d-none">
+            <span class="hinttext">Want to check the Controls first?</span>
+
+        </div>
+        <div class="buttons">
+            <button onclick="startGame()" onmouseover="playHoverEffect(), showHint()"
+                onmouseleave="stopHoverEffect(), leaveHint()"><img src="img/myImages/newIcons/playButton.png"></button>
+            <button onclick="showControls()" onmouseover="playHoverEffect()" onmouseleave="stopHoverEffect()"><img
+                    src="img/myImages/newIcons/controls.png"></button>
+        </div>
+
+        <img onclick="openInformationCard()" class="informationImg" onmouseover="playHoverEffect()"
+            onmouseleave="stopHoverEffect()" src="img/myImages/newIcons/informations.png">
+    </div>
+
+    <div id="controlsscreen" class="controlsscreen d-none">
+        <div class="headline">
+
+            <button class="backButtons" onclick="backToStartscreen()" onmouseover="playHoverEffect()"
+                onmouseleave="stopHoverEffect()"><img class="backButtonImg" src="img/myImages/newIcons/backButton.png"
+                    alt=""></button>
+
+
+            <h2>How to play</h2>
+        </div>
+
+        <div class="content">
+            <div class="move">
+              <img class="pepeImage" src="img/2_character_pepe/2_walk/W-22.png">
+              <div>
+                <h3>How to play:</h3>
+                <span><b>Move Left:</b> Arrow key left or A<br>
+                  <b>Move Right:</b> Arrow key right or D<br>
+                  <b>Jump:</b> Arrow Key up or space<br>
+                  <b>Throw bottle:</b> B</span>
+              </div>
+            </div>
+          </div>
+
+    </div>
+
+    <div id="loadingscreen" class="loadingscreen d-none">
+        <div class="inputLoadingscreen">
+            <span>Loading</span>
+            <ul>
+                <li class="dot"></li>
+                <li class="dot"></li>
+                <li class="dot"></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="winningscreen" class="winningscreen d-none">
+        <div class="backToStartscreen" onclick="backToStartscreen()" onmouseover="playHoverEffect()"
+            onmouseleave="stopHoverEffect()">
+            <img class="restartImg" src="img/myImages/newIcons/restartButton.png">
+            <p>Back Home</p>
+        </div>
+        <img id="wonImg" class="wonImg" src="img/9_intro_outro_screens/win/won_1.png">
+
+    </div>
+
+    <div id="loosingscreen" class="loosingscreen d-none">
+        <div class="backToStartscreen" onclick="backToStartscreen()" onmouseover="playHoverEffect()"
+            onmouseleave="stopHoverEffect()">
+            <img class="restartImg" src="img/myImages/newIcons/restartButton.png">
+            <p>Try Again!</p>
+        </div>
+        <img id="looseImg" class="looseImg" src="img/9_intro_outro_screens/game_over/game over.png">
+    </div>
+
+    <div id="informationscreen" class="informationscreen d-none">
+        <div id="menuscreen" class="menuscreen">
+            <div class="headline">
+
+                <button class="backButtons" onclick="backToStartscreen()" onmouseover="playHoverEffect()"
+                    onmouseleave="stopHoverEffect()"><img class="backButtonImg"
+                        src="img/myImages/newIcons/backButton.png" alt=""></button>
+
+
+                <h2>Informations</h2>
+            </div>
+            <div class="informationContent">
+                <div onclick="openDataProtection()" onmouseover="playHoverEffect()" onmouseleave="stopHoverEffect()"
+                    class="dataProtectionInformation">
+                    <img src="img/myImages/newIcons/icon.png">
+                    <span>Used Icons</span>
+                </div>
+                <div onclick="openAboutTheGame()" onmouseover="playHoverEffect()" onmouseleave="stopHoverEffect()"
+                    class="dataProtectionInformation">
+                    <img src="img/myImages/newIcons/informations.png">
+                    <span>About the game</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="dataProtectionscreen" class="imprintAndDataProtectionscreen d-none">
+            <div class="headline">
+                <button class="backButtons" onclick="backToInformationScreen('data')" onmouseover="playHoverEffect()"
+                    onmouseleave="stopHoverEffect()"><img class="backButtonImg"
+                        src="img/myImages/newIcons/backButton.png" alt=""></button>
+                <h2>Used Icons</h2>
+            </div>
+            <div class="dataProtectionContent">
+                <div class="links">
+                    <a href="https://icons8.com/icon/x7JgdzaODNF2/u-turn-to-left"
+                        target="_blank">Back</a>
+                    <a href="https://icons8.com/icon/82037/id-brunette-girl"
+                        target="_blank">contactDetails</a>
+                    <a href="https://icons8.com/icon/dAGhaVRSty3p/gear"
+                        target="_blank">Controls</a>
+                    <a href="https://icons8.com/icon/111399/list"
+                        target="_blank">Icon</a>
+                    <a href="https://icons8.com/icon/mHpzpCOQXE4k/info"
+                        target="_blank">Information</a>
+                    <a href="https://icons8.com/icon/114205/pause"
+                        target="_blank">Pause</a>
+                    <a href="https://icons8.com/icon/108811/play"
+                        target="_blank">Play</a>
+                    <a href="https://icons8.com/icon/122687/sync"
+                        target="_blank">Restart</a>
+                    <a href="https://icons8.com/icon/V6fkPemfL7it/auto-rotate-based-on-text"
+                        target="_blank">Rotate</a>
+                    <a href="https://icons8.com/icon/36b58rhOlrlv/low-volumeS"
+                        target="_blank">Sound-Off</a>
+                    <a href="https://icons8.com/icon/122510/audio"
+                        target="_blank">Sound-On</a>
+                </div>
+
+            </div>
+            <div class="linkFooter">
+                <span>All Icons are used from <a href="https://icons8.com/icons">Icons8</a></span>
+            </div>
+        </div>
+
+        <div id="aboutTheGamescreen" class="aboutTheGame d-none">
+            <div class="headline">
+
+                <button class="backButtons" onclick="backToInformationScreen('about')" onmouseover="playHoverEffect()"
+                    onmouseleave="stopHoverEffect()"><img class="backButtonImg"
+                        src="img/myImages/newIcons/backButton.png" alt=""></button>
+                <h2>About El Pollo Loco</h2>
+            </div>
+            <div class="aboutTheGameContent">
+                <span>El Pollo Loco is a 2D action game in which a Mexican hero fights chicks, chickens and a giant
+                    chicken boss. Jump on chicks and chickens and throw Tabasco bottles at the boss to win.
+                    Beat the boss to emerge victorious!</span>
+                <br>
+                <br>
+                <span>Have fun!</span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
