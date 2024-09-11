@@ -162,9 +162,17 @@ function showCanvas() {
  * Plays a hover sound effect with reduced volume.
  */
 function playHoverEffect() {
-  hover_sound.volume = 0.2;
-  hover_sound.play();
+  if (isUserInteracted) {  // Nur abspielen, wenn der Nutzer interagiert hat
+    hover_sound.volume = 0.2;
+    hover_sound.play().catch((error) => {
+      console.error("Audio konnte nicht abgespielt werden:", error);
+    });
+  }
 }
+
+// Flag zum Überwachen, ob eine Nutzerinteraktion stattgefunden hat
+let isUserInteracted = false;
+window.addEventListener('click', () => isUserInteracted = true); // Kann auch andere Events wie 'keydown' umfassen
 
 /**
  * Stops the hover sound effect.
