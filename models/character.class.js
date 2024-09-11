@@ -121,24 +121,25 @@ class Character extends MoveableObject {
    */
   moveCharacter() {
     this.walking_sound.pause();
+    if (!this.world) return; // Prüfen, ob this.world vorhanden ist, bevor weiter gemacht wird
     if (this.canMoveRight() && this.isBeforeEndboss()) {
-      this.moveRight();
+        this.moveRight();
     }
     if (this.canMoveLeft()) {
-      this.moveLeft();
+        this.moveLeft();
     }
     if (this.canJump()) {
-      this.jump();
+        this.jump();
     }
     this.world.camera_x = -this.x + 100;
-  }
+}
 
   /**
    * Checks if the character can move right.
    * @returns {boolean} - True if the right arrow key is pressed and the character has not reached the end of the level.
    */
   canMoveRight() {
-    return this.world.keyboard.RIGHT && this.x <= this.world.level.level_end_x;
+    return this.world && this.world.keyboard && this.world.keyboard.RIGHT && this.x <= this.world.level.level_end_x;
   }
 
   /**
@@ -177,7 +178,7 @@ class Character extends MoveableObject {
    * @returns {boolean} - True if the left arrow key is pressed and the character's position is greater than 0.
    */
   canMoveLeft() {
-    return this.world.keyboard.LEFT && this.x > 0;
+    return this.world && this.world.keyboard && this.world.keyboard.LEFT && this.x > 0;
   }
 
   /**
@@ -200,10 +201,12 @@ class Character extends MoveableObject {
    * @returns {boolean} - True if the up arrow or space key is pressed and the character is not above ground.
    */
   canJump() {
-    return (
-      (this.world.keyboard.UP && !this.isAboveGround()) ||
-      (this.world.keyboard.SPACE && !this.isAboveGround())
-    );
+  // Überprüfen, ob world und keyboard korrekt initialisiert sind
+  if (this.world && this.world.keyboard) {
+    return (this.world.keyboard.UP && !this.isAboveGround()) ||
+           (this.world.keyboard.SPACE && !this.isAboveGround());
+}
+return false;  // Falls keyboard null ist, gibt false zurück
   }
 
   /**
@@ -251,16 +254,18 @@ class Character extends MoveableObject {
    */
   playDeadSequence() {
     if (!this.deadAnimationPlayed) {
-      this.playAnimation(this.IMAGES_DEAD_ANIMATION);
-      this.deadAnimationPlayed = true;
+        this.playAnimation(this.IMAGES_DEAD_ANIMATION);
+        this.deadAnimationPlayed = true;
     } else {
-      this.playAnimation(this.IMAGES_DEAD_LAST);
-      setTimeout(() => {
-        playGameOverScreen();
-        this.world = null;
-      }, 500);
+        this.playAnimation(this.IMAGES_DEAD_LAST);
+        setTimeout(() => {
+            playGameOverScreen();
+            clearInterval(this.movingInterval);  // Stoppt das Bewegungsintervall
+            clearInterval(this.animationInterval);  // Stoppt das Animationsintervall
+            this.world = null;
+        }, 500);
     }
-  }
+}
 
   /**
    * Plays the jumping animation and pauses the snoring sound if the character is above ground.

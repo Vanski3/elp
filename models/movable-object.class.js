@@ -3,7 +3,7 @@ class MoveableObject extends DrawableObject {
   speedY = 0;
   acceleration = 1;
   otherDirection = false;
-  energy = 100;
+  energy = 150;
   endbossEnergy = 100;
   coins = 0;
   bottles = 0;
@@ -68,7 +68,7 @@ class MoveableObject extends DrawableObject {
    * Reduces character energy by 3. If energy drops to 0, sets it to 0; otherwise records the last hit time.
    */
   hitCharacter() {
-    this.energy -= 3;
+    this.energy -= 1;
     if (this.energy <= 15) {
       this.energy = 0;
     } else {

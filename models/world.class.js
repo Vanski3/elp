@@ -41,6 +41,7 @@ class World {
    */
   setWorld() {
     this.character.world = this;
+    this.character.world.keyboard = this.keyboard;
   }
 
   /**

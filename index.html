@@ -119,7 +119,7 @@
                 <span><b>Move Left:</b> Arrow key left or A<br>
                   <b>Move Right:</b> Arrow key right or D<br>
                   <b>Jump:</b> Arrow Key up or space<br>
-                  <b>Throw bottle:</b> B</span>
+                  <b>Throw bottle:</b> F</span>
               </div>
             </div>
           </div>
@@ -168,6 +168,11 @@
                 <h2>Informations</h2>
             </div>
             <div class="informationContent">
+                <div onclick="openImprint()" onmouseover="playHoverEffect()" onmouseleave="stopHoverEffect()"
+                class="personalContent">
+                <img src="img/myImages/newIcons/contactDetails.png">
+                <span>Imprint</span>
+              </div>
                 <div onclick="openDataProtection()" onmouseover="playHoverEffect()" onmouseleave="stopHoverEffect()"
                     class="dataProtectionInformation">
                     <img src="img/myImages/newIcons/icon.png">
@@ -178,6 +183,23 @@
                     <img src="img/myImages/newIcons/informations.png">
                     <span>About the game</span>
                 </div>
+            </div>
+        </div>
+
+
+        <div id="imprintscreen" class="imprintAndDataProtectionscreen d-none">
+            <div class="headline">
+
+                <button class="backButtons" onclick="backToInformationScreen('imprint')" onmouseover="playHoverEffect()"
+                    onmouseleave="stopHoverEffect()"><img class="backButtonImg"
+                        src="img/myImages/newIcons/backButton.png" alt=""></button>
+                <h2>Imprint</h2>
+            </div>
+            <div class="imprintContent">
+                <span>Imprint:</span>
+                <p>Vanessa Sachs</p> <br>
+                <p>Berlin</p>
+                <p>Deutschland</p>
             </div>
         </div>
 
