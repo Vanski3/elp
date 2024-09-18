@@ -461,11 +461,22 @@ function resetGame(){
   world.statusBarBottle.setPercentages(0);
   world.statusBarEndboss.setPercentages(100);
 
+  resetBottles(7);
+
   document.getElementById("loosingscreen").classList.add("d-none");
   document.getElementById("gamescreen").classList.remove("d-none");
 
   muted = false;
 
+
   initLevel();
   world.run();
+}
+
+function resetBottles(amount) {
+  world.level.bottles = []; // Leert die aktuelle Liste der Bottles
+  for (let i = 0; i < amount; i++) {
+    let bottle = new Bottle();
+    world.level.bottles.push(bottle); // Fügt neue Flaschen hinzu
+  }
 }
