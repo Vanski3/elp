@@ -553,6 +553,12 @@ li:nth-child(3) {
   }
 }
 
+@media only screen and (min-width: 900px){
+  #controlsForMobile{
+    display: none;
+  }
+}
+
 @media only screen and (max-width: 720px) {
   canvas,
   .startscreen,

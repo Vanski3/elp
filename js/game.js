@@ -452,6 +452,17 @@ document.getElementById("bottleThrow").addEventListener("pointerup", (e) => {
   keyboard.F = false;
 });
 
+
+/**
+ * Resets the game state to start a new round.
+ * 
+ * This function reinitializes the keyboard controls and the game world.
+ * It also resets the health, coin, bottle, and end boss status bars to their default values.
+ * The game screen is updated to hide the losing screen and show the game screen again.
+ * Bottles and chickens are reset to the specified amounts, and game sounds are unmuted.
+ * The losing sound flag is reset to ensure it plays again on subsequent losses.
+ * Finally, the level is reinitialized and the game world is set to run again.
+ */
 function resetGame(){
   keyboard = new Keyboard();
   world = new World(canvas, keyboard);
@@ -462,21 +473,44 @@ function resetGame(){
   world.statusBarEndboss.setPercentages(100);
 
   resetBottles(7);
+  resetChickens(6);
 
   document.getElementById("loosingscreen").classList.add("d-none");
   document.getElementById("gamescreen").classList.remove("d-none");
 
   muted = false;
+  loosingSoundWasPlayed = false;
 
 
   initLevel();
   world.run();
 }
 
+/**
+ * Function to reset bottles in the game.
+ * @param {number} amount - The number of bottles to generate.
+ */
 function resetBottles(amount) {
-  world.level.bottles = []; // Leert die aktuelle Liste der Bottles
+  world.level.bottles = []; // Clear the current list of bottles
   for (let i = 0; i < amount; i++) {
     let bottle = new Bottle();
-    world.level.bottles.push(bottle); // Fügt neue Flaschen hinzu
+    world.level.bottles.push(bottle); // Add new bottles
+  }
+}
+
+/**
+ * Function to reset chickens in the game.
+ * @param {number} amount - The number of chickens to generate.
+ */
+function resetChickens(amount) {
+  world.level.enemies = []; // Clear the current list of enemies (including chickens)
+  for (let i = 0; i < amount; i++) {
+    let chicken = new Chicken();
+    world.level.enemies.push(chicken); // Add new chickens
+  }
+
+  for (let i = 0; i < Math.floor(amount / 2); i++) { // Example: Half of the chickens are small chickens
+    let smallChicken = new ChickenSmall();
+    world.level.enemies.push(smallChicken);
   }
 }
