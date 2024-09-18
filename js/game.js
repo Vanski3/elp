@@ -454,39 +454,6 @@ document.getElementById("bottleThrow").addEventListener("pointerup", (e) => {
 
 
 /**
- * Resets the game state to start a new round.
- * 
- * This function reinitializes the keyboard controls and the game world.
- * It also resets the health, coin, bottle, and end boss status bars to their default values.
- * The game screen is updated to hide the losing screen and show the game screen again.
- * Bottles and chickens are reset to the specified amounts, and game sounds are unmuted.
- * The losing sound flag is reset to ensure it plays again on subsequent losses.
- * Finally, the level is reinitialized and the game world is set to run again.
- */
-function resetGame(){
-  keyboard = new Keyboard();
-  world = new World(canvas, keyboard);
-
-  world.statusBarHealth.setPercentages(100);
-  world.statusBarCoin.setPercentages(0);
-  world.statusBarBottle.setPercentages(0);
-  world.statusBarEndboss.setPercentages(100);
-
-  resetBottles(7);
-  resetChickens(6);
-
-  document.getElementById("loosingscreen").classList.add("d-none");
-  document.getElementById("gamescreen").classList.remove("d-none");
-
-  muted = false;
-  loosingSoundWasPlayed = false;
-
-
-  initLevel();
-  world.run();
-}
-
-/**
  * Function to reset bottles in the game.
  * @param {number} amount - The number of bottles to generate.
  */
@@ -514,3 +481,149 @@ function resetChickens(amount) {
     world.level.enemies.push(smallChicken);
   }
 }
+
+function stopAllSounds() {
+  // Pause and reset the background music
+  if (background_sound) {
+    background_sound.pause();
+    background_sound.currentTime = 0;
+  }
+
+  // Pause and reset hover, click, winning, and losing sounds
+  if (hover_sound) {
+    hover_sound.pause();
+    hover_sound.currentTime = 0;
+  }
+  if (click_sound) {
+    click_sound.pause();
+    click_sound.currentTime = 0;
+  }
+  if (winning_sound) {
+    winning_sound.pause();
+    winning_sound.currentTime = 0;
+  }
+  if (loosing_sound) {
+    loosing_sound.pause();
+    loosing_sound.currentTime = 0;
+  }
+
+  // Pause all enemy sounds, especially Endboss sounds
+  if (world && world.level && world.level.enemies) {
+    world.level.enemies.forEach((enemy) => {
+      if (enemy.endbossSound) {
+        enemy.endbossSound.pause();
+        enemy.endbossSound.currentTime = 0;
+      }
+    });
+  }
+
+  // Pause all bottle-related sounds
+  if (world && world.level && world.level.bottles) {
+    world.level.bottles.forEach((bottle) => {
+      if (bottle.bottleCollecting_sound) {
+        bottle.bottleCollecting_sound.pause();
+        bottle.bottleCollecting_sound.currentTime = 0;
+      }
+      if (bottle.bottleBarFull_sound) {
+        bottle.bottleBarFull_sound.pause();
+        bottle.bottleBarFull_sound.currentTime = 0;
+      }
+    });
+  }
+
+  // Stop any character or other object-related sounds
+  if (world && world.character) {
+    if (world.character.snoring_sound) {
+      world.character.snoring_sound.pause();
+      world.character.snoring_sound.currentTime = 0;
+    }
+  }
+}
+
+/**
+ * Stops all running animations in the game, such as enemies, objects, etc.
+ */
+function stopAllAnimations() {
+  if (world && world.level) {
+    // Stop animations for all enemies
+    world.level.enemies.forEach((enemy) => {
+      if (enemy.animationInterval) {
+        clearInterval(enemy.animationInterval);
+      }
+    });
+
+    // Stop animations for bottles
+    world.level.bottles.forEach((bottle) => {
+      if (bottle.animationInterval) {
+        clearInterval(bottle.animationInterval);
+      }
+    });
+
+    // Stop animations for throwable objects
+    world.throwableObject.forEach((object) => {
+      if (object.animationInterval) {
+        clearInterval(object.animationInterval);
+      }
+    });
+
+    // Stop any additional character animations
+    if (world.character.animationInterval) {
+      clearInterval(world.character.animationInterval);
+    }
+  }
+}
+
+function resetGame() {
+  keyboard = new Keyboard();
+  world = new World(canvas, keyboard);
+
+  // Stop all sounds and animations
+  stopAllSounds();
+  clearAllIntervals(); // Make sure all intervals are cleared
+  stopAllAnimations(); // Ensure all animations are stopped
+
+  // Reset status bars
+  world.statusBarHealth.setPercentages(100);
+  world.statusBarCoin.setPercentages(0);
+  world.statusBarBottle.setPercentages(0);
+  world.statusBarEndboss.setPercentages(100);
+
+  // Reset bottles and chickens
+  resetBottles(7);
+  resetChickens(6);
+
+  // Hide losing screen and show game screen
+  document.getElementById("loosingscreen").classList.add("d-none");
+  document.getElementById("gamescreen").classList.remove("d-none");
+
+  muted = false;
+  loosingSoundWasPlayed = false;
+
+  // Initialize and run the game
+  initLevel();
+  world.run(); // Start the game world
+
+  // Restart the character animations and gravity immediately
+  world.character.applyGravity(); // Restart gravity for character
+  world.character.animate(); // Restart character animation
+
+  // Restart animations for other elements like enemies and bottles immediately
+  world.level.enemies.forEach((enemy) => {
+    enemy.animateWalking(); // Restart walking animation for enemies
+  });
+  world.level.bottles.forEach((bottle) => {
+    bottle.animateBottle(); // Restart bottle animation
+  });
+
+  // Ensure the Endboss animation starts immediately after the reset
+  if (world.level.endboss && world.level.endboss.length > 0) {
+    world.level.endboss[0].animate(); // Restart Endboss animation
+  }
+
+  // Play background music without delay
+  if (!muted) {
+    background_sound.currentTime = 0; // Reset the background music
+    background_sound.play(); // Play the background music immediately
+  }
+}
+
