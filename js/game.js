@@ -451,3 +451,21 @@ document.getElementById("bottleThrow").addEventListener("pointerup", (e) => {
   e.preventDefault();
   keyboard.F = false;
 });
+
+function resetGame(){
+  keyboard = new Keyboard();
+  world = new World(canvas, keyboard);
+
+  world.statusBarHealth.setPercentages(100);
+  world.statusBarCoin.setPercentages(0);
+  world.statusBarBottle.setPercentages(0);
+  world.statusBarEndboss.setPercentages(100);
+
+  document.getElementById("loosingscreen").classList.add("d-none");
+  document.getElementById("gamescreen").classList.remove("d-none");
+
+  muted = false;
+
+  initLevel();
+  world.run();
+}
